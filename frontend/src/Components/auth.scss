@@ -1,0 +1,34 @@
+.auth{
+
+    .color{
+    position: absolute;
+    background-color: rgb(59, 41, 157); 
+    color: white;
+    left: 40%;
+    top: 30%;
+   padding: 1rem;
+    width: 20%;
+    text-align: center;
+
+    .close{
+        text-align: right;
+
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    .flex{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        font-size: 20px;
+
+        & div:hover{
+            cursor: pointer;
+        }
+    }
+    
+    }
+}

@@ -1,0 +1,38 @@
+.dashboard{
+
+.show{
+    display: block;
+}
+.hide{
+    display: none;
+}
+header{
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    padding: 2rem 4rem;
+    background-color: rgb(94, 94, 215);
+    nav{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+main{
+    padding: 5rem;
+    margin-top: 3rem;  
+
+    .services{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+
+        div{
+            background-color: blueviolet;
+            padding: 10px;
+            color: white;
+            width: 50%;
+        }
+    }
+}
+}
