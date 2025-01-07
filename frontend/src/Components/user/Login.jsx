@@ -5,9 +5,9 @@ import "./Login.scss";
 import { AppContext } from '../Context';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
-   const { setLogged} = useContext(AppContext)
+   const { setLogged, setEmail, email} = useContext(AppContext)
   const navigate = useNavigate();
 
   const onSubmitHandler = async (event)=>{
@@ -22,8 +22,9 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
 
         // Navigate to the home page
+        setEmail({email})
         navigate("/");
-        setLogged(false)
+        setLogged(true)
       } else {
         // Show error message if login is not successful
       console.log("Login failed. Please try again.");
