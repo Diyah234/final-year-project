@@ -3,57 +3,116 @@ const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+// Create a new reminder
+const createReminder = async (req, res) => {
+  try {
+    const { email, drugName, times, days, date } = req.body;
+    const newReminder = new Reminder({ email, drugName, times, days, date });
+    await newReminder.save();
+    res.status(201).json(newReminder);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-async function checkAndSendReminders () {
+// List all reminders
+const listReminder = async (req, res) => {
+  try {
+    const reminders = await Reminder.find({});
+    res.json({ success: true, data: reminders });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// List reminders by user email
+const listRemindersByEmail = async (req, res) => {
+  try {
+    const { email } = req.query; // Extract email from query parameters
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required.' });
+    }
+
+    const reminders = await Reminder.find({ email }); // Find reminders for the specific email
+    res.json({ success: true, data: reminders });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+// Delete a reminder
+const deleteReminder = async (req, res) => {
+  try {
+    const reminder = await Reminder.findByIdAndDelete(req.params.id);
+    res.json({ success: true, data: reminder });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+
+// Check and send reminders
+async function checkAndSendReminders() {
   const now = new Date();
-  // now.setHours(now.getHours() + 1); // Add 1 hour for GMT+1 (Nigeria time)
-  
-  // Get the current day and time in Nigeria
   const currentDay = now.toLocaleString('en-US', { weekday: 'long' });
-  const currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  
-  console.log(`Current Time: ${currentTime}`)
-  console.log("Starting reminder check...");
-  
-  const reminders = await Reminder.find();
-  console.log("Reminders retrieved:", reminders);
+  const currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-  reminders.forEach((reminder) => {
-    console.log("Processing reminder:", reminder);
-    const timesMapping = {
-      Morning: '02:09 AM',
-      Afternoon: '12:00',
-      Evening: '18:00',
-      Night: '20:00',
-    };
-    
+  console.log(`Current Day: ${currentDay}, Current Time: ${currentTime}`);
+  console.log('Starting reminder check...');
 
-    reminder.times.forEach((time) => {
-      const reminderTime = timesMapping[time];
-      console.log(`Current Time: ${currentTime}, Reminder Time: ${reminderTime}`);
+  const reminders = await Reminder.find(); // Retrieve all reminders
 
-      // Check for exact time, 5 minutes before, or 5 minutes after
-      const reminderDate = reminder.date ? new Date(reminder.date).toDateString() : null;
-
+  reminders.forEach(async (reminder) => {
+    reminder.times.forEach(async (time) => {
       if (
-        (!reminderDate || reminderDate === now.toDateString()) && // Matches date if provided
         reminder.days.includes(currentDay) && // Matches recurring day
-        (currentTime === reminderTime || // Matches exact time
-          currentTime === addMinutes(reminderTime, -5) || // Matches 5 minutes before
-          currentTime === addMinutes(reminderTime, 5)) // Matches 5 minutes after
+        isTimeWithinWindow(currentTime, time) && // Matches time within ±5 minutes
+        (!reminder.date || new Date(reminder.date).toDateString() === now.toDateString()) // Matches specific date if provided
       ) {
-        sendReminderEmail(reminder.email, reminder.drugName);
+        const now = new Date();
+        const lastSent = reminder.lastSent ? new Date(reminder.lastSent) : null;
+
+        // Check if an email was sent in the last 24 hours
+        if (!lastSent || now - lastSent > 24 * 60 * 60 * 1000) { 
+          sendReminderEmail(reminder.email, reminder.drugName);
+
+          // Update the lastSent field in the database
+          await Reminder.findByIdAndUpdate(reminder._id, { lastSent: now });
+        } else {
+          console.log(`Reminder for ${reminder.drugName} already sent recently.`);
+        }
       }
     });
   });
-};
-
-function addMinutes(time, minutes) {
-  const [hour, minute] = time.split(':').map(Number);
-  const date = new Date();
-  date.setHours(hour, minute + minutes);
-  return date.toTimeString().slice(0, 5); // Return HH:mm
 }
+
+function isTimeWithinWindow(currentTime, reminderTime) {
+  const current = parseTime(currentTime);
+  const reminder = parseTime(reminderTime);
+
+  // Calculate the difference in minutes
+  const diffInMinutes =
+    current.hours * 60 + current.minutes - (reminder.hours * 60 + reminder.minutes);
+
+  return diffInMinutes >= -5 && diffInMinutes <= 5; // Within ±5 minutes
+}
+
+
+function parseTime(timeString) {
+  const [time, period] = timeString.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+
+  if (period === 'PM' && hours !== 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+
+  return { hours, minutes };
+}
+
+
 
 function sendReminderEmail(email, drugName) {
   const transporter = nodemailer.createTransport({
@@ -80,10 +139,11 @@ function sendReminderEmail(email, drugName) {
   });
 }
 
+// Schedule the cron job
 cron.schedule('* * * * *', async () => {
   console.log('Running cron job for reminders...');
   await checkAndSendReminders();
 });
 
-module.exports= { checkAndSendReminders }
-
+// Export functions
+module.exports = { createReminder, listReminder, deleteReminder, listRemindersByEmail };

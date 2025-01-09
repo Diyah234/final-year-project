@@ -11,7 +11,8 @@ const reminderSchema = new mongoose.Schema({
         required: true 
     },
     days:{ type: [String] }, 
-    times: { type: [String] }
+    times: { type: [String] },
+    lastSent: Date
 })
 
 const reminderModel = mongoose.model('reminders', reminderSchema);
