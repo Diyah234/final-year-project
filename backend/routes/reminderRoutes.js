@@ -19,5 +19,5 @@ reminderRouter.get('/check-reminders', async (req, res) => {
 
 reminderRouter.get('/list', listReminder)
 reminderRouter.delete('/:id', deleteReminder)
-reminderRouter.get('/reminders/user', listRemindersByEmail); 
+reminderRouter.get('/user', listRemindersByEmail); 
 module.exports = reminderRouter;

@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const reminderSchema = new mongoose.Schema({
     email:{
         type: String,
-        require: true,
-        unique: true
+        require: true
     },
     drugName:{ 
         type: String, 
@@ -12,6 +11,7 @@ const reminderSchema = new mongoose.Schema({
     },
     days:{ type: [String] }, 
     times: { type: [String] },
+    ampm: {type: [String]},
     lastSent: Date
 })
 

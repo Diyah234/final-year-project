@@ -6,8 +6,8 @@ require('dotenv').config();
 // Create a new reminder
 const createReminder = async (req, res) => {
   try {
-    const { email, drugName, times, days, date } = req.body;
-    const newReminder = new Reminder({ email, drugName, times, days, date });
+    const { email, drugName, times, days, ampm } = req.body;
+    const newReminder = new Reminder({ email, drugName, times, days,ampm });
     await newReminder.save();
     res.status(201).json(newReminder);
   } catch (err) {
@@ -61,8 +61,8 @@ async function checkAndSendReminders() {
   const currentDay = now.toLocaleString('en-US', { weekday: 'long' });
   const currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-  console.log(`Current Day: ${currentDay}, Current Time: ${currentTime}`);
-  console.log('Starting reminder check...');
+  // console.log(`Current Day: ${currentDay}, Current Time: ${currentTime}`);
+  // console.log('Starting reminder check...');
 
   const reminders = await Reminder.find(); // Retrieve all reminders
 
@@ -141,7 +141,6 @@ function sendReminderEmail(email, drugName) {
 
 // Schedule the cron job
 cron.schedule('* * * * *', async () => {
-  console.log('Running cron job for reminders...');
   await checkAndSendReminders();
 });
 

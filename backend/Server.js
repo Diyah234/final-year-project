@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/userRoute');
 const reminderRouter = require('./routes/reminderRoutes');
+const doctorRouter = require('./routes/doctorRoute');
 dotenv.config();
 
 
@@ -26,6 +27,8 @@ connectDB();
 
 app.use("/api/user", userRouter)
 app.use("/api/reminders", reminderRouter)
+app.use('/api/doctor', doctorRouter)
+app.use("/uploads", express.static("uploads"))
 
 app.listen( 4000, ()=>{
     console.log('Server running on port 4000')
