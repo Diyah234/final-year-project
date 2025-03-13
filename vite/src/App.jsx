@@ -9,6 +9,8 @@ import Reminder from './Components/user/Reminder';
 import Consult from './Components/user/Consult';
 import DashboardDoc from './Components/Doctor/DashboardDoc';
 import MailDoctor from './Components/user/MailDoctor';
+import Success from './Components/user/Success';
+import Reply from './Components/Doctor/Reply';
 import { BrowserRouter, Route, Routes  } from 'react-router-dom';
 
 function App() {
@@ -26,7 +28,9 @@ function App() {
         <Route path='/medication-reminder' element={  <Reminder />}/>
         <Route path='/consult' element={  <Consult />}/>
         <Route path='/consult/:id' element={  <MailDoctor />}/>
+        <Route path='/reply/:id' element={  <Reply />}/>
         <Route path='/Doctor' element={  <DashboardDoc />}/>
+        <Route path='/success' element={  <Success />}/>
       </Routes>
       
     </BrowserRouter>

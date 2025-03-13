@@ -20,7 +20,7 @@ const loginDoctor = async (req, res) => {
         message: "invalid email or password",
       });
     }
-    const token = createToken(doctor._id);
+    const token = createToken(doctor._id, "doctor");
     res.json({
       success: true,
       token,
@@ -34,9 +34,10 @@ const loginDoctor = async (req, res) => {
   }
 };
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+const createToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET);
 };
+
 
 const signupDoc = async (req, res) => {
   const { name, password, email, jobTitle,hospital } = req.body;
@@ -65,7 +66,8 @@ const signupDoc = async (req, res) => {
     const doctor = await newDoc.save();
     console.log("New Doctor:", doctor);
 
-    const token = createToken(doctor._id);
+    const token = createToken(doctor._id, "doctor");
+
 
     res.json({
       success: true,
