@@ -22,21 +22,22 @@ const Consult = () => {
   }, []);
 
   return (
-    <div className="consult">
-      <h1>Select Professional</h1>
-      <div className="prof">
+    <div className="consult-simple">
+      <h1 className="consult-title-simple">Select Professional</h1>
+      <div className="prof-simple">
         {doctors.map((doctor) => (
           <div
-            className="details"
+            className="details-simple"
             key={doctor._id}
-            onClick={() => navigate(`/consult/${doctor._id}`)} // Navigate to the dynamic URL
+            onClick={() => navigate(`/consult/${doctor._id}`)}
           >
-            <div>
+            <div className="image-container-simple">
               <img src={doctor.image || 'default-image-url.png'} alt={doctor.name} />
             </div>
-            <div>
-              <p>{doctor.name}</p>
-              <p>{doctor.hospital}</p>
+            <div className="info-simple">
+              <p className="name-simple">{doctor.name}</p>
+              <p className="hospital-simple">{doctor.hospital}</p>
+              <p className="hospital-simple">{doctor.years}</p>
             </div>
           </div>
         ))}

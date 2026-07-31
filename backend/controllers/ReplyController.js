@@ -6,6 +6,8 @@ require('dotenv').config();
 const createReply = async(req,res)=>{
     const {
         doctorId,
+        doctorName,
+        patientEmail,
         patientName,
         message,
         appointmentDate,
@@ -13,7 +15,8 @@ const createReply = async(req,res)=>{
     } = req.body
 
     try {
-        const newReply = new replyModel({
+         // Use replyModel.create() to create and save a new document
+         const newReply = await replyModel.create({
             doctorId,
             doctorName,
             patientEmail,
@@ -21,15 +24,15 @@ const createReply = async(req,res)=>{
             message,
             appointmentDate,
             hospital
-        })
-        await newReply.save();
-        await sendReplyEmail(patientEmail, patientName, message, appointmentDate, hospital)
+        });
+
+        await sendReplyEmail(patientEmail, doctorName, message, appointmentDate, hospital);
 
         res.status(201).json({
             success: true,
             message: 'Reply request sent successfully',
-            data: newConsult
-          });
+            data: newReply
+        });
     }catch(error){
         console.log(error)
     }
@@ -41,7 +44,7 @@ async function sendReplyEmail(email, doctorName, message, appointmentDate,hospit
             service: 'gmail',
             auth:{
                 user: process.env.EMAIL,
-                pass: process.env.PASSWORD
+                pass: process.env.EMAIL_PASSWORD
             }
         })
         const mailOptions = {

@@ -11,6 +11,8 @@ import DashboardDoc from './Components/Doctor/DashboardDoc';
 import MailDoctor from './Components/user/MailDoctor';
 import Success from './Components/user/Success';
 import Reply from './Components/Doctor/Reply';
+import Sign from './Components/user/Sign';
+import "@fontsource/kanit";
 import { BrowserRouter, Route, Routes  } from 'react-router-dom';
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
       <Routes>
         <Route path='/' element={  <Dashboard />}/>
         <Route path='/Userauth' element={  <Login />}/>
+        <Route path='/Signup' element={  <Sign />}/>
         <Route path='/Docauth' element={  <Doclogin />}/>
         <Route path='/medication-reminder' element={  <Reminder />}/>
         <Route path='/consult' element={  <Consult />}/>

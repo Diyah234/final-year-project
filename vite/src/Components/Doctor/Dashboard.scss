@@ -1,0 +1,102 @@
+// Dashboard.scss
+
+.dashboardDoc {
+    font-family: sans-serif;
+  
+    .dashboard-header {
+      position: fixed;
+      left: 0;
+      right: 0;
+      color: black;
+      padding: 1rem 2rem;
+      z-index: 10;
+      top: 0;
+      color: white;
+      background-color: #144a78;
+  
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+  
+        .logo {
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+  
+        .user-info {
+          p {
+            margin: 0;
+          }
+        }
+      }
+    }
+  
+    .dashboard-main {
+      padding: 2rem;
+      margin-top: 4rem;
+  
+      h1 {
+        color: #144a78;
+        margin-bottom: 1.5rem;
+      }
+  
+      .consultations-section {
+        display: block;
+        h2 {
+          color: #144a78;
+          margin-bottom: 1rem;
+        }
+  
+        .loading-message,
+        .no-consultations {
+          color: #666;
+          text-align: center;
+          margin-top: 2rem;
+        }
+  
+        .consultations-list {
+          .consultation-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+  
+            &:hover {
+              transform: translateY(-3px);
+            }
+  
+            h3 {
+              color: #144a78;
+              margin-bottom: 0.5rem;
+            }
+  
+            p {
+              margin-bottom: 0.5rem;
+              strong {
+                color: #144a78;
+              }
+            }
+  
+            .view-details-button {
+              background-color: #144a78;
+              color: white;
+              border: none;
+              padding: 0.5rem 1rem;
+              border-radius: 4px;
+              cursor: pointer;
+              transition: background-color 0.2s ease;
+              margin-top: 1rem;
+  
+              &:hover {
+                background-color: darken(#144a78, 10%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }

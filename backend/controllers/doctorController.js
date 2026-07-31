@@ -40,7 +40,7 @@ const createToken = (id, role) => {
 
 
 const signupDoc = async (req, res) => {
-  const { name, password, email, jobTitle,hospital } = req.body;
+  const { name, password, email, jobTitle,hospital,years } = req.body;
   let imageName = req.file.filename;
   try {
     console.log("Request Body:", req.body);
@@ -62,7 +62,7 @@ const signupDoc = async (req, res) => {
     const hashed = await bcrypt.hash(password, salt);
     console.log("Hashed Password:", hashed);
 
-    const newDoc = new doctorModel({ name, email, password: hashed , jobTitle, hospital, image: imageName});
+    const newDoc = new doctorModel({ name, email, password: hashed , jobTitle, hospital, image: imageName, years});
     const doctor = await newDoc.save();
     console.log("New Doctor:", doctor);
 

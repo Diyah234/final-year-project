@@ -1,8 +1,9 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./Login.scss";
 import { AppContext } from "../Context";
+import Navbar from "./Navbar";
 
 const Login = () => {
   const [password, setPassword] = useState("");
@@ -39,9 +40,12 @@ const Login = () => {
 
   return (
     <div className="login">
+     <h1>Login as a Patient</h1>
+      <div className="formbox">
       <form onSubmit={onSubmitHandler}>
         <label>
           Email:
+          <br />
           <input
             type="email"
             value={email}
@@ -52,6 +56,7 @@ const Login = () => {
         <br />
         <label>
           Password:
+          <br />
           <input
             type="password"
             value={password}
@@ -63,8 +68,9 @@ const Login = () => {
         <button type="submit">Log In</button>
       </form>
       <p>
-        Don&apos;t have an account? <span>Sign Up</span>
+        Don&apos;t have an account? <Link to="/Signup" >Sign Up</Link>
       </p>
+      </div>
     </div>
   );
 };

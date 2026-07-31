@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "../Context";
+import './Doclogin.scss'
 
 const Doclogin = () => {
 
@@ -43,11 +44,12 @@ const Doclogin = () => {
   };
 
   return (
-    <div>
+    <div className="login">
       <h1>Login as a Doctor</h1>
       <form onSubmit={onSubmitHandler}>
         <label>
           Email:
+          <br />
           <input
             type="email"
             value={docEmail}
@@ -58,6 +60,7 @@ const Doclogin = () => {
         <br />
         <label>
           Password:
+          <br />
           <input
             type="password"
             value={password}

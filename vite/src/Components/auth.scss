@@ -1,34 +1,63 @@
-.auth{
-
-    .color{
-    position: absolute;
-    background-color: rgb(59, 41, 157); 
-    color: white;
-    left: 40%;
-    top: 30%;
-   padding: 1rem;
-    width: 20%;
-    text-align: center;
-
-    .close{
+.auth {
+    .color {
+      position: absolute;
+      background-color: #144A78E5;
+      color: white;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 2rem;
+      width: 300px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+      .close {
         text-align: right;
-
-        &:hover{
-            cursor: pointer;
-        }
-    }
-    .flex{
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+      }
+  
+      .flex {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        padding: 2rem;
-        font-size: 20px;
-
-        & div:hover{
-            cursor: pointer;
+        padding: 1.5rem 0;
+        font-size: 1.2rem;
+  
+        p {
+          margin-bottom: 1rem;
         }
+  
+        .options {
+          display: flex;
+          justify-content: space-around;
+          width: 100%;
+  
+          div {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid white;
+  
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.2);
+            }
+          }
+        }
+      }
     }
-    
+  
+    .fade {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: -1;
     }
-}
+  }

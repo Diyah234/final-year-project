@@ -10,6 +10,14 @@ const replySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+     patientEmail:{
+        type: String,
+        required: true
+    },
+    doctorName:{
+        type: String,
+        required: true
+    },
     message:{
         type: String,
         required: true
@@ -23,3 +31,5 @@ const replySchema = new mongoose.Schema({
 })
 
 const replyModel = mongoose.model('reply', replySchema)
+
+module.exports = replyModel;

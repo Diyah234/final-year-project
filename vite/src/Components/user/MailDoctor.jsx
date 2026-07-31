@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './mailDoctor.scss';
+import './mailDoctor.scss'; // Import SCSS
 import axios from 'axios';
 
 const MailDoctor = () => {
@@ -14,7 +14,7 @@ const MailDoctor = () => {
     medicalConditionDetails: '',
     allergies: '',
     consultationReason: '',
-    additionalInfo: ''
+    additionalInfo: '',
   });
 
   const navigate = useNavigate();
@@ -42,10 +42,10 @@ const MailDoctor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = { 
-        ...formData, 
+      const payload = {
+        ...formData,
         doctorId: id,
-        doctorEmail: doctor.email // Include doctor's email for notification
+        doctorEmail: doctor.email, // Include doctor's email for notification
       };
       await axios.post('http://localhost:4000/api/consult/send', payload);
       alert('Your consultation request was sent successfully!');
@@ -61,44 +61,60 @@ const MailDoctor = () => {
   }
 
   return (
-    <div className="mail-doctor">
+    <div className="mail-doctor-container">
       <h2>Request Consultation</h2>
       <div className="doctor-info">
         <img src={`http://localhost:4000/uploads/${doctor.image}`} alt={doctor.name} />
-        <p><strong>Name:</strong> {doctor.name}</p>
-        <p><strong>Email:</strong> {doctor.email}</p>
-        <p><strong>Hospital:</strong> {doctor.hospital}</p>
+        <div className='details'>
+        <p>
+          <strong>Name:</strong> {doctor.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {doctor.email}
+        </p>
+        <p>
+          <strong>Hospital:</strong> {doctor.hospital}
+        </p>
+        <p>
+          <strong>Years of Experience:</strong> {doctor.years}
+        </p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="consultation-form">
         <h3>Consultation Form</h3>
 
         <label>
           Your Full Name:
-          <input 
-            type="text" 
-            name="patientName" 
-            value={formData.patientName} 
-            onChange={handleChange} 
-            placeholder="Enter your full name" 
-            required 
+          <input
+            type="text"
+            name="patientName"
+            value={formData.patientName}
+            onChange={handleChange}
+            placeholder="Enter your full name"
+            required
           />
         </label>
         <label>
           Your Email:
-          <input 
-            type="text" 
-            name="patientEmail" 
-            value={formData.patientEmail} 
-            onChange={handleChange} 
-            placeholder="Enter your email" 
-            required 
+          <input
+            type="text"
+            name="patientEmail"
+            value={formData.patientEmail}
+            onChange={handleChange}
+            placeholder="Enter your email"
+            required
           />
         </label>
 
         <label>
           Blood Group:
-          <select name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} required>
+          <select
+            name="bloodGroup"
+            value={formData.bloodGroup}
+            onChange={handleChange}
+            required
+          >
             <option value="">Select Blood Group</option>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
@@ -113,10 +129,10 @@ const MailDoctor = () => {
 
         <label className="checkbox-label">
           Do you have any existing medical conditions?
-          <input 
-            type="checkbox" 
-            name="hasMedicalConditions" 
-            checked={formData.hasMedicalConditions} 
+          <input
+            type="checkbox"
+            name="hasMedicalConditions"
+            checked={formData.hasMedicalConditions}
             onChange={handleChange}
           />
         </label>
@@ -124,10 +140,10 @@ const MailDoctor = () => {
         {formData.hasMedicalConditions && (
           <label>
             Medical Condition Details:
-            <textarea 
-              name="medicalConditionDetails" 
-              value={formData.medicalConditionDetails} 
-              onChange={handleChange} 
+            <textarea
+              name="medicalConditionDetails"
+              value={formData.medicalConditionDetails}
+              onChange={handleChange}
               placeholder="Please describe your medical conditions"
             ></textarea>
           </label>
@@ -135,31 +151,31 @@ const MailDoctor = () => {
 
         <label>
           Allergies (if any):
-          <textarea 
-            name="allergies" 
-            value={formData.allergies} 
-            onChange={handleChange} 
+          <textarea
+            name="allergies"
+            value={formData.allergies}
+            onChange={handleChange}
             placeholder="List any allergies you have"
           ></textarea>
         </label>
 
         <label>
           Reason for Consultation:
-          <textarea 
-            name="consultationReason" 
-            value={formData.consultationReason} 
-            onChange={handleChange} 
-            placeholder="Explain why you want to consult with the doctor" 
+          <textarea
+            name="consultationReason"
+            value={formData.consultationReason}
+            onChange={handleChange}
+            placeholder="Explain why you want to consult with the doctor"
             required
           ></textarea>
         </label>
 
         <label>
           Additional Information:
-          <textarea 
-            name="additionalInfo" 
-            value={formData.additionalInfo} 
-            onChange={handleChange} 
+          <textarea
+            name="additionalInfo"
+            value={formData.additionalInfo}
+            onChange={handleChange}
             placeholder="Provide any additional information or concerns here"
           ></textarea>
         </label>

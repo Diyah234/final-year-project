@@ -26,6 +26,10 @@ const doctorSchema = new mongoose.Schema({
         type: String,
         require: false
     },
+    years:{
+        type: String,
+        require: true
+    },
 })
 
 const doctorModel = mongoose.model('doctor', doctorSchema);

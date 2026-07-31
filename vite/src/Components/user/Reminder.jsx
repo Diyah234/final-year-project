@@ -2,23 +2,30 @@ import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { AppContext } from "../Context";
 import ListReminder from "./Listreminder";
+import "./Reminder.scss"; // Import SCSS
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Reminder = () => {
-  const { email, name, showReminders,setShowReminders  } = useContext(AppContext); // Access email and name from context
+  const { email, name, showReminders, setShowReminders } = useContext(AppContext); // Access email and name from context
   const [formData, setFormData] = useState({
     email: email || "", // Pre-fill email from context
     drugName: "",
     days: [], // Array to hold selected days
-    times: [],
+    times: "", // Changed to string for time input
     ampm: "AM", // Default value for AM/PM
   });
+  const [loadingEmail, setLoadingEmail] = useState(true);
 
+  const navigate = useNavigate()
   useEffect(() => {
     // Update email in formData when context email changes
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      email,
-    }));
+    if (email) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email,
+      }));
+      setLoadingEmail(false);
+    } 
   }, [email]);
 
   const handleChange = (e) => {
@@ -38,92 +45,127 @@ const Reminder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/reminders", formData);
+      const timeWithAMPM = `${formData.times} ${formData.ampm}`;
+      await axios.post("http://localhost:4000/api/reminders", {
+        ...formData,
+        times: [timeWithAMPM], // Send time as an array with AM/PM
+      });
       alert("Reminder set successfully!");
+      navigate("/success")
+      setFormData({
+        email: email || "",
+        drugName: "",
+        days: [],
+        times: "",
+        ampm: "AM",
+      }); // Reset form
     } catch (error) {
       console.error("Failed to set reminder", error);
+      alert("Failed to set reminder. Please try again.");
     }
   };
 
   return (
-    <div>
+    <div className="reminder-container">
       <h1>Set Your Reminder</h1>
-      <p>Welcome, {name}!</p>
-      <form onSubmit={handleSubmit}>
-        {/* Display email directly */}
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            disabled // Prevent editing the email
-          />
-        </label>
-        <br />
-        <label>
-          Drug Name:
-          <input
-            type="text"
-            name="drugName"
-            value={formData.drugName}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Time:
-          <input
-            type="time"
-            name="times"
-            value={formData.times}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          AM / PM:
-          <input
-            type="radio"
-            name="ampm"
-            value="AM"
-            checked={formData.ampm === "AM"}
-            onChange={handleChange}
-          />
-          AM
-          <input
-            type="radio"
-            name="ampm"
-            value="PM"
-            checked={formData.ampm === "PM"}
-            onChange={handleChange}
-          />
-          PM
-        </label>
-        <br />
-        <label>Select Days:</label>
-        <br />
-        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
-          <label key={day}>
+      <p className="welcome-message">
+        Welcome, {name || "User"}!
+      </p>
+      {loadingEmail ? (
+        <p>Loading email...</p>
+      ) : (
+        <form onSubmit={handleSubmit} className="reminder-form">
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
             <input
-              type="checkbox"
-              name="days"
-              value={day}
-              checked={formData.days.includes(day)}
-              onChange={handleChange}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              disabled // Prevent editing the email
             />
-            {day}
-          </label>
-        ))}
-        <br />
-        <button type="submit">Set Reminder</button>
-      </form>
-      <p onClick={()=> setShowReminders(true)}>check reminders?</p>
-      {showReminders && (
-        <ListReminder/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="drugName">Drug Name:</label>
+            <input
+              type="text"
+              id="drugName"
+              name="drugName"
+              value={formData.drugName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group time-group">
+            <label htmlFor="times">Time:</label>
+            <input
+              type="time"
+              id="times"
+              name="times"
+              value={formData.times}
+              onChange={handleChange}
+              required
+            />
+            <div className="ampm-group">
+              <label>
+                <input
+                  type="radio"
+                  name="ampm"
+                  value="AM"
+                  checked={formData.ampm === "AM"}
+                  onChange={handleChange}
+                />
+                AM
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="ampm"
+                  value="PM"
+                  checked={formData.ampm === "PM"}
+                  onChange={handleChange}
+                />
+                PM
+              </label>
+            </div>
+          </div>
+          <div className="form-group days-group">
+            <label>Select Days:</label>
+            <div className="checkbox-group">
+              {[
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ].map((day) => (
+                <label key={day}>
+                  <input
+                    type="checkbox"
+                    name="days"
+                    value={day}
+                    checked={formData.days.includes(day)}
+                    onChange={handleChange}
+                  />
+                  {day}
+                </label>
+              ))}
+            </div>
+          </div>
+          <button type="submit" className="set-reminder-button">
+            Set Reminder
+          </button>
+        </form>
       )}
+      <p
+        className="check-reminders-link"
+        onClick={() => setShowReminders(true)}
+      >
+        Check reminders?
+      </p>
+      {showReminders && <ListReminder />}
     </div>
   );
 };

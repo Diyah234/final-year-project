@@ -1,45 +1,45 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../Context';
-import AuthPage from '../AuthPage';
-import "./dashboard.scss"
+import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import doctor from '../../assets/doctor.png'
+import DailyHealthTip from './DailyHealthTip'; 
+import "./dashboard.scss";
 
 const Dashboard = () => {
-    const { pop, setpop, logged, name} = useContext(AppContext);
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
-    <div className='dashboard'>
-       <div className={`${pop ? "show" : "hide"}`}><AuthPage /></div> 
-        <header>
-            <nav>
-                <div>MedAssist</div>
-                <div>
-                    {logged ? <div>user</div> : <button onClick={() => setpop(true)}>Log in</button> }
-                    
-                </div>
-            </nav>
-        </header>
-        <main>
-        <h1>Welcome <span>{name}</span></h1>
-        <h3>Which of these services do you want to do</h3>
-        <div className='services'>
-            <div onClick={()=> navigate('/medication-reminder')}>
-                <h3>Medication Reminder</h3>
-                <p>Get reminders to take your medication</p>
-            </div>
-            <div onClick={()=> navigate('/consult')}>
-                <h3>Consultation and appointment booking</h3>
-                <p>Consult a doctor and get your appointment booked today</p>
-            </div>
+    <div className="dashboard">
+      <Navbar />
+      <main>
+        <div className="text">
+        <p className="purple">
+          {" "}
+          <span className="plus">+</span>{" "}
+          <span className="best">Best Healthcare</span>
+        </p>
+        <h1>Online Doctors <br /> A Few Clicks Away</h1>
+        <p>
+          MedAssist provides a One-stop Health Solution. A few clicks away! Contact a
+          doctor, other healthcare professionals, or a specialist via text,
+          video, or phone..
+        </p>
+        <div className="services">
+          <div onClick={() => navigate("/medication-reminder")}>
+          Set Medication Reminder
+          </div>
+          <div onClick={() => navigate("/consult")}>
+            Consultation and Appointments
+          </div>
         </div>
-        <div>
-            <h2>Daily Health Tips</h2>
-            <p>eat well</p>
+        <div className="tips">
+         <DailyHealthTip />
         </div>
-        </main>
+        
+        </div>
+        <div className="doctor">
+            <img src={doctor} />
+        </div>
+      </main>
     </div>
-  )
-}
-
-export default Dashboard
-
+  );
+};
+export default Dashboard;
